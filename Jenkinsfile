@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        sonarRunner 'sonar-scanner'
+    }
+
     stages {
 
         stage('Build') {
@@ -12,9 +16,10 @@ pipeline {
         stage('SonarQube analysis') {
             steps {
                 withSonarQubeEnv('sonar') {
-                    sh '''
-                    $SONAR_SCANNER_HOME/bin/sonar-scanner
-                    '''
+                    script {
+                        def scannerHome = tool 'SonarScanner'
+                        sh "${scannerHome}/bin/sonar-scanner"
+                    }
                 }
             }
         }
