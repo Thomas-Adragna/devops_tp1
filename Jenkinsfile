@@ -16,7 +16,7 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'pip install pytest pytest-cov --break-system-packages'
-                sh '/var/jenkins_home/.local/bin/pytest test/ --cov=src --cov-report=xml:coverage.xml --junitxml=test-results.xml'
+                sh '/var/jenkins_home/.local/bin/pytest test/ -v --import-mode=importlib --cov=src --cov-report=xml:coverage.xml --junitxml=test-results.xml'
             }
         }
 
