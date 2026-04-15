@@ -15,7 +15,7 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'pip install pytest pytest-cov'
+                sh 'pip install pytest pytest-cov --break-system-packages'
                 sh 'pytest test/ --cov=src --cov-report=xml:coverage.xml --junitxml=test-results.xml'
             }
         }
