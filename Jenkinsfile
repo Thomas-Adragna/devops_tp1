@@ -41,10 +41,8 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
-                    sh """
-                        curl -v -u admin:$NEXUS_PASS --upload-file src/main.py http://nexus.orb.local/repository/tp1-releases/devops/devops_tp1/1.0.54/devops_tp1-1.0.54.py
-                    """
+                withCredentials([usernamePassword(credentialsId: 'nexus-credentials',usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    sh 'curl -u $NEXUS_USER:$NEXUS_PASS --upload-file src/main.py http://nexus.orb.local/repository/tp1-releases/devops/devops_tp1/1.0.54/devops_tp1-1.0.54.py'
                 }
             }
         }
