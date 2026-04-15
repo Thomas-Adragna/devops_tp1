@@ -38,5 +38,27 @@ pipeline {
                 }
             }
         }
+
+        stage('Publish to Nexus') {
+            steps {
+                nexusArtifactUploader(
+                    nexusVersion: 'nexus3',
+                    protocol: 'http',
+                    nexusUrl: 'nexus.orb.local',
+                    groupId: 'devops',
+                    version: "1.0.${BUILD_NUMBER}",
+                    repository: 'tp1-releases',
+                    credentialsId: 'nexus-credentials',
+                    artifacts: [
+                        [
+                            artifactId: 'devops_tp1',
+                            classifier: '',
+                            file: 'src/main.py',
+                            type: 'py'
+                        ]
+                    ]
+                )
+            }
+        }
     }
 }
