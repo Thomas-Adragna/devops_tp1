@@ -41,23 +41,13 @@ pipeline {
 
         stage('Publish to Nexus') {
             steps {
-                nexusArtifactUploader(
-                    nexusVersion: 'nexus3',
-                    protocol: 'http',
-                    nexusUrl: 'nexus.orb.local',
-                    groupId: 'devops',
-                    version: "1.0.${BUILD_NUMBER}",
-                    repository: 'tp1-releases',
-                    credentialsId: 'nexus-credentials',
-                    artifacts: [
-                        [
-                            artifactId: 'devops_tp1',
-                            classifier: '',
-                            file: 'src/main.py',
-                            type: 'py'
-                        ]
-                    ]
-                )
+                withCredentials([usernamePassword(credentialsId: 'nexus-credentials', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASS')]) {
+                    sh """
+                        curl -u ${NEXUS_USER}:${NEXUS_PASS} \
+                             --upload-file src/main.py \
+                             "http://nexus.orb.local/repository/tp1-releases/devops/devops_tp1/1.0.${BUILD_NUMBER}/devops_tp1-1.0.${BUILD_NUMBER}.py"
+                    """
+                }
             }
         }
     }
