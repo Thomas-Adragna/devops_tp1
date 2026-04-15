@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        sonarRunner 'sonar-scanner'
+        sonarRunner 'SonarScanner'
     }
 
     stages {
@@ -10,6 +10,13 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'python3 -m py_compile src/main.py'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                sh 'pip install pytest pytest-cov'
+                sh 'pytest test/ --cov=src --cov-report=xml:coverage.xml --junitxml=test-results.xml'
             }
         }
 
@@ -23,8 +30,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Quality Gate') {
+            steps {
+                timeout(time: 5, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
     }
 }
-
-
-
